@@ -6,7 +6,7 @@
 #   1. filtros (recorte geografico + classificacao dos casos)
 #   2. KPIs
 #   3. mapa (5) | evolucao por classificacao (7)
-#   4. Rt do InfoDengue (largura total)
+#   4. Rt do InfoDengue (7) | tendencia por municipio - quadrantes (5)
 #   5. gestantes (7) | sazonalidade (5)
 #   6. perfil (sexo x idade)
 # Aba "Análises": ranking de municipios, classificacao por ano, achados.
@@ -59,11 +59,18 @@ bslib::page_navbar(
                      rodape = "Início dos sintomas. Sem correção de atraso: com tão poucos casos por semana, o nowcast seria ruído.")
     ),
 
-    cartao_grafico("Rt (InfoDengue) — número de reprodução efetivo", mod_rt_saida("rt", "320px"),
-                   mod_rt_controles("rt"),
-                   rodape = sprintf(
-                     "Acima de 1 (linha tracejada), cada caso gera mais de um caso novo. No estado e na RIDE, média dos municípios ponderada pelos casos. O InfoDengue parou de estimar o Rt de zika em %s (no Brasil todo).",
-                     if (is.na(RT_DATA_MAX)) "fev/2024" else format(RT_DATA_MAX, "%d/%m/%Y"))),
+    bslib::layout_columns(
+      col_widths = c(7, 5),
+      cartao_grafico("Rt (InfoDengue) — número de reprodução efetivo", mod_rt_saida("rt", "440px"),
+                     mod_rt_controles("rt"),
+                     rodape = sprintf(
+                       "Acima de 1 (linha tracejada), cada caso gera mais de um caso novo. No estado e na RIDE, média dos municípios ponderada pelos casos. O InfoDengue parou de estimar o Rt de zika em %s (no Brasil todo).",
+                       if (is.na(RT_DATA_MAX)) "fev/2024" else format(RT_DATA_MAX, "%d/%m/%Y"))),
+      # Nao e o Rt real: nome mantido igual ao do dengue_ride (ver R/mod_mapa_rt.R).
+      cartao_grafico("Rt — Tendência por município (quadrantes)",
+                     mod_mapa_rt_saida("tendencia", "440px"), mod_mapa_rt_controles("tendencia"),
+                     rodape = "Não é o Rt: compara cada município com ele mesmo em anos anteriores (X) e com a janela anterior (Y). Segue o filtro \"Casos\"; o recorte só destaca o município. Fora de surto, quase todos ficam sem histórico suficiente.")
+    ),
 
     bslib::layout_columns(
       col_widths = c(7, 5),

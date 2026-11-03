@@ -18,6 +18,7 @@ zika_ride/
 │   ├── mod_mapa.R       # incidência / casos / gestantes por município
 │   ├── mod_serie.R      # casos por mês ou semana, empilhados por classificação
 │   ├── mod_rt.R         # Rt do InfoDengue (como no dengue_ride)
+│   ├── mod_mapa_rt.R    # Rt — Tendência por município (quadrantes), como no dengue_ride
 │   ├── mod_gestantes.R  # gestantes por ano: classificação e trimestre
 │   ├── mod_heatmap.R    # sazonalidade ano x SE
 │   ├── mod_perfil.R     # faixa etária x sexo (gestantes destacadas)
@@ -56,6 +57,7 @@ RPostgres para o ETL).
 | Gestantes | `CS_GESTANT` 1–3 = trimestre; 4 = idade gestacional ignorada. Substituem o canal endêmico no painel. |
 | Sem canal / nowcast | Desde 2021 a RIDE tem 0–2 notificações por semana: quartis históricos e correção de atraso seriam ruído. A série abre agregada por mês. |
 | Rt | `rt` do InfoDengue (`"Info_Dengue".zika`), por município, como no dengue_ride; no estado e na RIDE, média ponderada pelos casos. **O InfoDengue parou de estimar zika em 11/02/2024** (Brasil todo): o gráfico mostra a série histórica até lá. |
+| Rt — Tendência (quadrantes) | Não é o Rt: X = casos da janela atual ÷ mediana da mesma janela nos anos anteriores (deslocada 52, 104… semanas); Y = janela atual ÷ janela anterior. Cor = quadrante, forma = incidência acumulada no ano. Todos os municípios sempre; o recorte só destaca o selecionado. Segue o filtro "Casos"; janela padrão 26 sem. (até 52), sem nowcast. Fora de surto quase todo município fica "sem histórico suficiente". |
 | Município sem notificação | Água Fria de Goiás nunca notificou zika; a população dos 34 municípios vem em `zika_ride_pop.parquet` para ele aparecer no mapa e no denominador. Sem esse arquivo (ETL antigo) o app roda com 33. |
 | Residência no DF | Todo 53xxxx vai para 5300108. |
 | População | Estimativa anual do IBGE em `"Info_Dengue".dengue`; anos sem estimativa herdam o ano vizinho. |
